@@ -1,0 +1,61 @@
+body {
+  font-family: 'Patrick Hand', cursive;
+  background-image: url("../images/light-grey.png");
+}
+
+nav {
+  background-color: #72dbcd ;
+  font-family: 'Gloria Hallelujah', cursive;
+  text-shadow: -1.5px 0 lightsteelblue, 0 1.5px lightsteelblue, 1.5px 0 lightsteelblue, 0 -1.5px lightsteelblue;
+}
+
+/* Going around the whole body */
+.container {
+  margin-top: 60px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Dropdown menu */
+.dropdown-content li>a {
+  color: black;
+}
+
+/* Form styling for the beginning */
+#form-input {
+  text-align: center;
+  width: 400px;
+  height: 300px;
+  margin: 0 auto;
+  margin-top: 60px;
+}
+
+#first-form {
+  background-color: white;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  padding: 30px;
+  border: .5px solid black;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+#start {
+  text-align: center;
+  width: 400px;
+  height: 300px;
+  margin: 0 auto;
+  margin-top: 80px;
+}
+
+#intro {
+  background-color: white;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  padding: 30px;
+  border: .5px solid black;
+  border-radius: 10px;
+  font-size: 24px;
+}

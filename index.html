@@ -3,17 +3,76 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Concert WarmUp</title>
+  <title>RPS Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" media="screen" href="assets/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah|Patrick+Hand" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" media="screen" href="assets/css/reset.css"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css"/>
 
 </head>
 <body>
+
+<!-- Dropdown Structure -->
+<ul id="dropdown1" class="dropdown-content">
+    <li><a href="https://madelyneh.github.io/TriviaGame/">Harry Potter Trivia Game</a></li>
+    <li class="divider"></li>
+    <li><a href="https://madelyneh.github.io/Word-Guess-Game/">Safari Hangman</a></li>
+    <!-- <li class="divider"></li>
+    <li><a href="#!">three</a></li> -->
+  </ul>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#!" class="brand-logo center" style="line-height: 60px; font-weight: bold">Rock, Paper or Scissors</a>
+      <ul class="right hide-on-med-and-down">
+        
+        <!-- Dropdown Trigger -->
+        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1" style="line-height: 60px">More games &#x25BE; </a></li>
+      </ul>
+    </div>
+  </nav>    
+
+  <div class="container">
+      <div class="row">
+
+        <!-- Where they start the game -->
+        <div id="start">
+
+          <div id="intro">
+            <p>Are you and a friend ready to play the best game of RPS out there??</p>
+            <br>
+            <p> If you are, make a username and click the "Start" button to begin playing.</p>
+
+          </div>
+
+          <div id="form-input">
+              <form id="first-form">
+                Username:<br>
+                <input type="text" name="username" placeholder="name"><br>
+                <br>
+                <input class="btn-small" id="startBtn" type="submit" value="Start">
+              </form>
+          </div>
+
+        </div>
+
+      </div>
+  </div>
   
 
+
+  
+  
+
+
+
   <!-- Javascript and jQuery -->
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="assets/main.js"></script>
+  <script src="assets/game.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 </body>
 </html>
