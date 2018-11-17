@@ -39,6 +39,10 @@ $(document).ready(function() {
 
   //for the dropdown menu
   $(".dropdown-trigger").dropdown();
+//WORKING HERE. Clearing the database
+  if ((player1 !== null) && (player2 === null)) {
+
+  }
 
 
 });
