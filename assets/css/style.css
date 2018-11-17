@@ -153,7 +153,6 @@ h2 {
   height: 80%;
   width: 49%;
   float: left;
-  border-right: 1px dotted black;
   
 }
 
@@ -164,8 +163,8 @@ h2 {
   
 }
 
-/* #line {
-  border: .5px solid black;
-  height: 150px;
-} */
 
+.their-turn {
+  border: 5px solid lime;
+  border-right: 5px solid lime;
+}
