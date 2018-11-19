@@ -63,43 +63,44 @@ nav {
 
 /* Chat styling */
 #chat {
-  width: 80%;
+  width: 100%;
   height: 100%;
   padding: 10px;
   background-color: white;
   border: .5px solid black;
   border-radius: 10px;
-
+  margin-left: 20px;
+  display: inline-block;
 }
 
 #chatHistory {
   width: 100%;
+  padding: 10px;
   max-height: 350px;
   min-height: 200px;
+  overflow: scroll
 }
 
 #chat-input {
-  width: auto;
-  min-height: 160px;
+  width: 100%;
+  min-height: 100px;
   max-height: 250px;
-  position: relative;
 }
 
 #chat-form {
-  width: 100%;
+  width: auto;
   height: auto;
   padding: 10px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
   border-top: .5px dotted black;
   border-radius: 5px;
 }
 
 #chatMsg {
  overflow: scroll;
- max-height: 100px;
+ max-height: 135px;
+
 }
+
 
 /* Image styling */
 #selection {
@@ -163,8 +164,29 @@ h2 {
   
 }
 
-
 .their-turn {
   border: 5px solid lime;
   border-right: 5px solid lime;
 }
+/* Style for the chat bubbles */
+.floatLeft {
+  padding: 15px;
+  margin: 5px;
+  float: left;
+  height: auto;
+  width: auto;
+  background-color: lightgray;
+  border-radius: 20px;
+}
+
+.floatRight {
+  padding: 15px;
+  margin: 5px;
+  float: right;
+  height: auto;
+  width: auto;
+  background-color: #167df2;
+  color: white;
+  border-radius: 20px;
+}
+

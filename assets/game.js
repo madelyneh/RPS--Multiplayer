@@ -21,29 +21,23 @@ let player2 = null;
 let player2Name = "";
 let player2Choice = "";
 
+let yourPlayerName;
 
 
-//This allows the page to stay up to date with what is happening in the function
-// database.ref().on("value", function(snapshot) {
-
-//   console.log(snapshot.val());
-
-//   name = snapshot.val().database.name;
-
- 
-
-// });
+// This function clears the database
+function clearDatabase() {
+  database.ref("/players/").remove();
+  database.ref("/chat/").remove();
+  database.ref("/turn/").remove();
+};
 
 
 $(document).ready(function() {
 
   //for the dropdown menu
   $(".dropdown-trigger").dropdown();
-//WORKING HERE. Clearing the database
-  if ((player1 !== null) && (player2 === null)) {
 
-  }
-
+  $("#deleteDatabase").on("click", clearDatabase);
 
 });
 
@@ -56,8 +50,7 @@ $("#startBtn").on("click", function(event){
   if ( ($("#name").val().trim() !== "") && !(player1 && player2) ) {
     // Adding player1
     if (player1 === null) {
-      console.log("Adding Player 1");
-
+      
       yourPlayerName = $("#name").val().trim();
       player1 = {
         name: yourPlayerName,
@@ -76,8 +69,7 @@ $("#startBtn").on("click", function(event){
 
     } else if( (player1 !== null) && (player2 === null) ) {
       // Adding player2
-      console.log("Adding Player 2");
-
+      
       yourPlayerName = $("#name").val().trim();
       player2 = {
         name: yourPlayerName,
@@ -92,17 +84,6 @@ $("#startBtn").on("click", function(event){
 
     };
 
-    // Add a user joining message to the chat
-    let msg = yourPlayerName + " has joined!";
-  
-
-    // Get a key for the join chat entry
-    let chatKey = database.ref().child("/chat/").push().key;
-
-    // Save the join chat entry
-    database.ref("/chat/" + chatKey).set(msg);
-
-
   };
 
   $("#start").hide();
@@ -111,8 +92,9 @@ $("#startBtn").on("click", function(event){
 
 });
 
+//Checks if the players exists and displays a msg if not
 database.ref("/players/").on("value", function(snapshot) {
-	// Check for existence of player 1 in the database
+	
 	if (snapshot.child("player1").exists()) {
 		console.log("Player 1 exists");
 
@@ -122,7 +104,7 @@ database.ref("/players/").on("value", function(snapshot) {
 
 		// Update player1 display
 		$("#1name").text(player1Name);
-		$("#player1Stats").html("Win: " + player1.win + ", Loss: " + player1.loss + ", Tie: " + player1.tie);
+	//	$("#player1Info").html("Win: " + player1.win + ", Loss: " + player1.loss + ", Tie: " + player1.tie);
 	} else {
 
 		player1 = null;
@@ -132,7 +114,6 @@ database.ref("/players/").on("value", function(snapshot) {
 		$("#1name").text("Waiting for Player 1...");
 	}
 
-	// Check for existence of player 2 in the database
 	if (snapshot.child("player2").exists()) {
 
 		// Record player2 data
@@ -141,7 +122,7 @@ database.ref("/players/").on("value", function(snapshot) {
 
 		// Update player2 display
 		$("#2name").text(player2Name);
-		$("#player2Stats").html("Win: " + player2.win + ", Loss: " + player2.loss + ", Tie: " + player2.tie);
+		//$("#player2Info").html("Win: " + player2.win + ", Loss: " + player2.loss + ", Tie: " + player2.tie);
 	} else {
 
 		player2 = null;
@@ -163,11 +144,48 @@ database.ref("/players/").on("value", function(snapshot) {
 });
 
 
-
 //Click event for the chat section
 $("#chatBtn").on("click", function(event){
 
-  event.preventDefault();
+	event.preventDefault();
 
+	// First, make sure that the player exists and the message box is non-empty
+	if ( (yourPlayerName !== "") && ($("#chatMsg").val().trim() !== "") ) {
+	
+		let msg = yourPlayerName + ": " + $("#chatMsg").val().trim();
+    $("#chatMsg").val("");
+    $("#chatMsg").height("0px");
+
+		// Get a key for the new chat entry
+		let chatKey = database.ref().child("/chat/").push().key;
+
+		// Save the new chat entry
+		database.ref("/chat/" + chatKey).set(msg);
+	}
 });
 
+// Attach a listener to the database /chat/ node to listen for any new chat messages
+database.ref("/chat/").on("child_added", function(snapshot) {
+	let chatMsg = snapshot.val();
+  let chatEntry = $("<div>");
+  let yourMsg = $("<div>").html(chatMsg);
+  let theirMsg = $("<div>").html(chatMsg);
+
+  
+   if (chatMsg.startsWith(yourPlayerName)) {
+    chatEntry.addClass("col s12");
+    yourMsg.addClass("floatLeft");
+    chatEntry.html(yourMsg);
+    
+	} else {
+    chatEntry.addClass("col s12");
+    theirMsg.addClass("floatRight");
+    chatEntry.html(theirMsg);
+    
+	}
+
+	$("#chatHistory").append(chatEntry);
+	$("#chatHistory").scrollTop($("#chatHistory")[0].scrollHeight);
+});
+
+//Click
