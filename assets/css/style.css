@@ -197,5 +197,8 @@ h2 {
 }
 
 .flash-light {
-  background-color: red;
+  height: 100%;
+  width: 100%;
+  border: 3px solid red;
+  border-radius: 10px;
 }

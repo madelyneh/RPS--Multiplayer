@@ -23,6 +23,8 @@ let player2Choice = "";
 
 let yourPlayerName;
 
+// let flashInterval;
+
 
 // This function clears the database
 function clearDatabase() {
@@ -106,7 +108,6 @@ $("#startBtn").on("click", function(event){
 
   $("#game").show();
 
-  flashingLight();
 
 });
 
@@ -255,15 +256,3 @@ $("img").on("click", function(){
   };
 
 });
-
-function flashingLight() {
-
-  for (let i = 0; i < 20; i--) {
-
-  let newDiv = $("<div>");
-  newDiv.addClass("flash-light");
-  $("#users").html(newDiv);
-  console.log("It's working.");
-  };
-
-};
