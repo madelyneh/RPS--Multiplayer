@@ -36,7 +36,7 @@ nav {
   height: auto;
   text-align: left;
   padding: 30px;
-  border: .5px solid black;
+  border: 1px solid black;
   border-radius: 10px;
   font-size: 18px;
 }
@@ -55,7 +55,7 @@ nav {
   height: auto;
   text-align: left;
   padding: 30px;
-  border: .5px solid black;
+  border: 1px solid black;
   border-radius: 10px;
   font-size: 24px;
 }
@@ -67,7 +67,7 @@ nav {
   height: 100%;
   padding: 10px;
   background-color: white;
-  border: .5px solid black;
+  border: 1px solid black;
   border-radius: 10px;
   margin-left: 20px;
   display: inline-block;
@@ -91,7 +91,7 @@ nav {
   width: auto;
   height: auto;
   padding: 10px;
-  border-top: .5px dotted black;
+  border-top: 1px dotted black;
   border-radius: 5px;
 }
 
@@ -112,13 +112,14 @@ nav {
   border-radius: 10px;
   font-size: 24px;
   word-spacing: 200px;
+  padding: 10px;
 }
 
 
 img {
-  max-height: 230px;
-  max-width: 230px;
-  padding: 40px;
+  max-height: 200px;
+  max-width: 200px;
+  padding: 10px;
   
 }
 
@@ -134,7 +135,7 @@ h2 {
 
 /* score */
 #users-score {
-  height: 200px;;
+  height: 200px;
   width: 100%;
   background-color: white;
   text-align: center;
@@ -164,9 +165,14 @@ h2 {
   
 }
 
+.their-choice {
+  border-radius: 20px;
+  background: radial-gradient(lime, white);
+}
+
 .their-turn {
   border: 5px solid lime;
-  border-right: 5px solid lime;
+  
 }
 /* Style for the chat bubbles */
 .floatLeft {
@@ -190,3 +196,6 @@ h2 {
   border-radius: 20px;
 }
 
+.flash-light {
+  background-color: red;
+}

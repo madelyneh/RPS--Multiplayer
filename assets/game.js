@@ -29,6 +29,18 @@ function clearDatabase() {
   database.ref("/players/").remove();
   database.ref("/chat/").remove();
   database.ref("/turn/").remove();
+
+  //Player2 info
+  player1 = null;
+  player1Name = "";
+  player1Choice = "";
+
+  //Player2 info
+  player2 = null;
+  player2Name = "";
+  player2Choice = "";
+
+  yourPlayerName;
 };
 
 
@@ -82,13 +94,19 @@ $("#startBtn").on("click", function(event){
       // Add player2 to the database
       database.ref().child("/players/player2").set(player2);
 
+    } else {
+      $("#users").text("Waiting for both players to enter game.");
     };
 
+  } else if ( $("#name").val().trim() === "" && !(player1 && player2)) {
+    $("#users").text("Waiting for both players to join.");
   };
 
   $("#start").hide();
 
   $("#game").show();
+
+  flashingLight();
 
 });
 
@@ -100,7 +118,9 @@ database.ref("/players/").on("value", function(snapshot) {
 
 		// Record player1 data
 		player1 = snapshot.val().player1;
-		player1Name = player1.name;
+    player1Name = player1.name;
+    console.log(player1Name);
+
 
 		// Update player1 display
 		$("#1name").text(player1Name);
@@ -118,7 +138,9 @@ database.ref("/players/").on("value", function(snapshot) {
 
 		// Record player2 data
 		player2 = snapshot.val().player2;
-		player2Name = player2.name;
+    player2Name = player2.name;
+    console.log(player2Name);
+
 
 		// Update player2 display
 		$("#2name").text(player2Name);
@@ -188,4 +210,60 @@ database.ref("/chat/").on("child_added", function(snapshot) {
 	$("#chatHistory").scrollTop($("#chatHistory")[0].scrollHeight);
 });
 
-//Click
+//Click event for the elements
+$("img").on("click", function(){
+  
+  let playerChoice = this.getAttribute("id");
+
+  $("#" + playerChoice).addClass("their-choice");
+
+  function removeClass() {
+     $("#" + playerChoice).removeClass("their-choice");
+  };
+
+  setTimeout(removeClass, 200);
+
+  // If both players are active
+  if ((player1 !== null) && (player2 !== null)) {
+    
+    // if current user's name is equal to player1Name
+    if (yourPlayerName === player1Name) {
+
+    // if current user's name is equal to player2Name
+    } else if (yourPlayerName === player2Name) {
+
+    } else {
+      alert("error. user not in database");
+    };
+
+  
+  } 
+  //If there are no players
+  else if ((player1 === null) && (player2 === null)){
+    $("#users").text("Waiting for both players to join.");
+
+  } 
+  //If player1 is empty
+  else if ((player1 === null) && (player2 !== null)) {
+    $("#users").text("Waiting for the other player to enter game.");
+    
+  } 
+  //If player2 is empty
+  else if ((player2 === null) && (player1 !== null)) {
+    $("#users").text("Waiting for the other player to enter game.");
+
+  };
+
+});
+
+function flashingLight() {
+
+  for (let i = 0; i < 20; i--) {
+
+  let newDiv = $("<div>");
+  newDiv.addClass("flash-light");
+  $("#users").html(newDiv);
+  console.log("It's working.");
+  };
+
+};
