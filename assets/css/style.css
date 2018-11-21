@@ -171,9 +171,16 @@ h2 {
 }
 
 .their-turn {
-  border: 5px solid lime;
-  
+  box-shadow: 0 0 0 .2rem rgba(230, 43, 10, 0.568);
+  border-radius: 10px;
 }
+
+.winner {
+  border: 5px solid lime;
+  box-shadow: 0 0 0 .2rem rgba(0, 255, 0, 0.473);
+  border-radius: 10px;
+}
+
 /* Style for the chat bubbles */
 .floatLeft {
   padding: 15px;
@@ -196,9 +203,14 @@ h2 {
   border-radius: 20px;
 }
 
-.flash-light {
-  height: 100%;
-  width: 100%;
-  border: 3px solid red;
-  border-radius: 10px;
+.choiceMsg {
+  padding: 15px;
+  margin: 5px;
+  height: auto;
+  width: auto;
+  background-color: rgba(0, 255, 55, 0.658);
+  color: black;
+  font-size: 20px;
+  border-radius: 20px;
+  text-align: center;
 }

@@ -22,8 +22,7 @@ let player2Name = "";
 let player2Choice = "";
 
 let yourPlayerName;
-
-// let flashInterval;
+let turn;
 
 
 // This function clears the database
@@ -43,8 +42,101 @@ function clearDatabase() {
   player2Choice = "";
 
   yourPlayerName;
+  turn;
 };
 
+//Sets the next round up
+function nextRound() {
+
+  $("#player1").removeClass("winner");
+  $("#player2").removeClass("winner");
+
+  database.ref().child("/turn").set(1);
+
+};
+
+//Compares the game results
+function gameResults() {
+
+  let outcome;
+  let pick1 = $("<div>");
+  let result1 = $("<div>").html(player1.name + " picked: " + player1.choice);
+
+  let pick2 = $("<div>");
+  let result2 = $("<div>").html(player2.name + " picked: " + player2.choice);
+
+   //Notify of the tie
+  if (player1.choice === player2.choice) {
+
+    outcome = "It's a tie!";
+
+    database.ref().child("/players/player1/tie").set(player1.tie + 1);
+    database.ref().child("/players/player2/tie").set(player2.tie + 1);
+  }
+  else if (player1.choice === "rock") {
+    
+    if (player2.choice === "scissors") {
+
+      outcome = player1.name + " wins!";
+      
+      $("#player1").addClass("winner");
+
+      database.ref().child("/players/player1/win").set(player1.win + 1);
+      database.ref().child("/players/player2/loss").set(player2.loss + 1);
+    } 
+
+    else if (player2.choice === "paper") {
+
+      $("#player2").addClass("winner");
+      
+    };
+  }
+  else if (player1.choice === "paper") {
+    
+    if (player2.choice === "rock") {
+
+      $("#player1").addClass("winner");
+    
+    } 
+    else if (player2.choice === "scissors") {
+
+      $("#player2").addClass("winner");
+    
+    };
+  }
+
+  else if (player1.choice === "scissors") {
+    
+    if (player2.choice === "paper") {
+
+      $("#player1").addClass("winner");
+    
+    } 
+    else if (player2.choice === "rock") {
+
+      $("#player2").addClass("winner");
+
+    
+    };
+  };
+
+  $("#users").text(outcome);
+
+  pick1.addClass("col s12");
+  pick2.addClass("col s12");
+  result1.addClass("choiceMsg");
+  result2.addClass("choiceMsg");
+
+  pick1.html(result1);
+  pick2.html(result2);
+
+
+  $("#chatHistory").append(pick1);
+  $("#chatHistory").append(pick2);
+
+  database.ref().child("/turn").set(0);
+
+};
 
 $(document).ready(function() {
 
@@ -76,11 +168,9 @@ $("#startBtn").on("click", function(event){
 
       // Add player1 to the database
       database.ref().child("/players/player1").set(player1);
-
-
       // Set the turn value to 1, as player1 goes first
-      database.ref().child("/turn").set(1);
-
+      database.ref().child("/turn").set(0);
+      
     } else if( (player1 !== null) && (player2 === null) ) {
       // Adding player2
       
@@ -95,7 +185,9 @@ $("#startBtn").on("click", function(event){
       
       // Add player2 to the database
       database.ref().child("/players/player2").set(player2);
-
+      // Set the turn value to 1, as player1 goes first
+      database.ref().child("/turn").set(1);
+      
     } else {
       $("#users").text("Waiting for both players to enter game.");
     };
@@ -108,64 +200,7 @@ $("#startBtn").on("click", function(event){
 
   $("#game").show();
 
-
 });
-
-//Checks if the players exists and displays a msg if not
-database.ref("/players/").on("value", function(snapshot) {
-	
-	if (snapshot.child("player1").exists()) {
-		console.log("Player 1 exists");
-
-		// Record player1 data
-		player1 = snapshot.val().player1;
-    player1Name = player1.name;
-    console.log(player1Name);
-
-
-		// Update player1 display
-		$("#1name").text(player1Name);
-	//	$("#player1Info").html("Win: " + player1.win + ", Loss: " + player1.loss + ", Tie: " + player1.tie);
-	} else {
-
-		player1 = null;
-		player1Name = "";
-
-		// Update player1 display
-		$("#1name").text("Waiting for Player 1...");
-	}
-
-	if (snapshot.child("player2").exists()) {
-
-		// Record player2 data
-		player2 = snapshot.val().player2;
-    player2Name = player2.name;
-    console.log(player2Name);
-
-
-		// Update player2 display
-		$("#2name").text(player2Name);
-		//$("#player2Info").html("Win: " + player2.win + ", Loss: " + player2.loss + ", Tie: " + player2.tie);
-	} else {
-
-		player2 = null;
-		player2Name = "";
-
-		// Update player2 display
-		$("#2name").text("Waiting for Player 2...");
-	}
-
-	// If both players are now present, it's player1's turn
-	if (player1 && player2) {
-
-		// Update the display with a green border around player 1
-    $("#player1").addClass("their-turn");
-    $("#users").text("Waiting for " + player1Name + " to choose.");
-
-	}
-
-});
-
 
 //Click event for the chat section
 $("#chatBtn").on("click", function(event){
@@ -187,30 +222,6 @@ $("#chatBtn").on("click", function(event){
 	}
 });
 
-// Attach a listener to the database /chat/ node to listen for any new chat messages
-database.ref("/chat/").on("child_added", function(snapshot) {
-	let chatMsg = snapshot.val();
-  let chatEntry = $("<div>");
-  let yourMsg = $("<div>").html(chatMsg);
-  let theirMsg = $("<div>").html(chatMsg);
-
-  
-   if (chatMsg.startsWith(yourPlayerName)) {
-    chatEntry.addClass("col s12");
-    yourMsg.addClass("floatLeft");
-    chatEntry.html(yourMsg);
-    
-	} else {
-    chatEntry.addClass("col s12");
-    theirMsg.addClass("floatRight");
-    chatEntry.html(theirMsg);
-    
-	}
-
-	$("#chatHistory").append(chatEntry);
-	$("#chatHistory").scrollTop($("#chatHistory")[0].scrollHeight);
-});
-
 //Click event for the elements
 $("img").on("click", function(){
   
@@ -228,31 +239,157 @@ $("img").on("click", function(){
   if ((player1 !== null) && (player2 !== null)) {
     
     // if current user's name is equal to player1Name
-    if (yourPlayerName === player1Name) {
-
+    if ((yourPlayerName === player1.name) && (turn === 1)) {
+      
+      player1Choice = playerChoice;
+      database.ref().child("/players/player1/choice").set(player1Choice);
+      database.ref().child("/turn").set(2);
+      console.log(player1Choice + " player 1");
+    }
     // if current user's name is equal to player2Name
-    } else if (yourPlayerName === player2Name) {
+    else if ((yourPlayerName === player2.name) && (turn === 2)) {
+      player2Choice = playerChoice;
+      database.ref().child("/players/player2/choice").set(player2Choice);
+      database.ref().child("/turn").set(3);
+      console.log(player2Choice + " player 2");
 
-    } else {
-      alert("error. user not in database");
+    } 
+
+    else {
+
+      console.log("Houston, we have a problem.");
     };
-
   
   } 
   //If there are no players
-  else if ((player1 === null) && (player2 === null)){
-    $("#users").text("Waiting for both players to join.");
+  else {
 
-  } 
-  //If player1 is empty
-  else if ((player1 === null) && (player2 !== null)) {
-    $("#users").text("Waiting for the other player to enter game.");
-    
-  } 
-  //If player2 is empty
-  else if ((player2 === null) && (player1 !== null)) {
-    $("#users").text("Waiting for the other player to enter game.");
-
+    $("#users").text("Waiting for all players to join the game.");
   };
 
 });
+
+//Checks if the players exists and displays a msg if not
+database.ref("/players/").on("value", function(snapshot) {
+	
+	if (snapshot.child("player1").exists()) {
+
+		// Record player1 data
+		player1 = snapshot.val().player1;
+    player1Name = player1.name;
+		$("#1name").text(player1Name);
+		$("#player1Info").html("Win: " + player1.win + ", Loss: " + player1.loss + ", Tie: " + player1.tie);
+	} else {
+
+		player1 = null;
+		player1Name = "";
+		$("#1name").text("Waiting for Player 1...");
+	};
+
+	if (snapshot.child("player2").exists()) {
+
+		// Record player2 data
+		player2 = snapshot.val().player2;
+    player2Name = player2.name;
+		$("#2name").text(player2Name);
+		$("#player2Info").html("Win: " + player2.win + ", Loss: " + player2.loss + ", Tie: " + player2.tie);
+	} else {
+
+		player2 = null;
+		player2Name = "";
+		$("#2name").text("Waiting for Player 2...");
+	};
+
+});
+
+// Attach a listener to the database /chat/ node to listen for any new chat messages
+database.ref("/chat/").on("child_added", function(snapshot) {
+	let chatMsg = snapshot.val();
+  let chatEntry = $("<div>");
+  let newMsg = $("<div>").html(chatMsg);
+  // let theirMsg = $("<div>").html(chatMsg);
+
+  
+   if (chatMsg.startsWith(yourPlayerName)) {
+    chatEntry.addClass("col s12");
+    newMsg.addClass("floatLeft");
+    chatEntry.html(newMsg);
+    
+	} else {
+    chatEntry.addClass("col s12");
+    newMsg.addClass("floatRight");
+    chatEntry.html(newMsg);
+    
+	}
+
+	$("#chatHistory").append(chatEntry);
+	$("#chatHistory").scrollTop($("#chatHistory")[0].scrollHeight);
+});
+
+//Listener to the turn
+database.ref().child("/turn").on("value", function(snapshot) {
+  turn = snapshot.val();
+
+  if ((turn === 0) && (player1 && player2 !== null)) {
+
+    setTimeout("database.ref().child('/turn').set(1)", 4000);
+
+
+  } else if ((turn === 1) && (player1 && player2 !== null)) {
+
+    $("#player1").removeClass("winner");
+    $("#player2").removeClass("winner");
+
+    if (yourPlayerName === player1Name) {
+
+      $("#player2").removeClass("their-turn");
+
+      $("#player1").addClass("their-turn");
+      $("#users").text("Waiting for " + player1Name + " to choose.");
+    } else if (yourPlayerName !== player1Name) {
+
+      $("#player2").removeClass("their-turn");
+
+      $("#player1").addClass("their-turn");
+      $("#users").text("Waiting for " + player1Name + " to choose.");
+    };
+  } else if ((turn === 2) && (player1 && player2 !== null)) {
+
+    if (yourPlayerName === player2Name) {
+
+      $("#player1").removeClass("their-turn");
+
+      $("#player2").addClass("their-turn");
+      $("#users").text("Waiting for " + player2Name + " to choose.");
+
+    } else if (yourPlayerName !== player2Name) {
+
+      $("#player1").removeClass("their-turn");
+
+      $("#player2").addClass("their-turn");
+      $("#users").text("Waiting for " + player2Name + " to choose.");
+
+    };  
+  } else if ((turn === 3) && (player1 && player2 !== null)) {
+
+    $("#player1").removeClass("their-turn");
+    $("#player2").removeClass("their-turn");
+
+    gameResults(); 
+  };
+
+});
+
+// //Listener to player 1's choice
+// database.ref().child("/players/player1/choice").on("value", function(snapshot) {
+
+//   player1.choice = snapshot.val();
+//   console.log(player1.choice);
+// });
+
+// //Listener to player 2's choice
+// database.ref().child("/players/player2/choice").on("value", function(snapshot) {
+
+//   player2.choice = snapshot.val();
+//   console.log(player2.choice);
+// });
