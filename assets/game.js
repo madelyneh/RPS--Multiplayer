@@ -45,16 +45,6 @@ function clearDatabase() {
   turn;
 };
 
-//Sets the next round up
-function nextRound() {
-
-  $("#player1").removeClass("winner");
-  $("#player2").removeClass("winner");
-
-  database.ref().child("/turn").set(1);
-
-};
-
 //Compares the game results
 function gameResults() {
 
@@ -88,6 +78,11 @@ function gameResults() {
     else if (player2.choice === "paper") {
 
       $("#player2").addClass("winner");
+
+      outcome = player2.name + " wins!";
+      
+      database.ref().child("/players/player2/win").set(player2.win + 1);
+      database.ref().child("/players/player1/loss").set(player1.loss + 1);
       
     };
   }
@@ -96,12 +91,18 @@ function gameResults() {
     if (player2.choice === "rock") {
 
       $("#player1").addClass("winner");
-    
+
+      database.ref().child("/players/player1/win").set(player1.win + 1);
+      database.ref().child("/players/player2/loss").set(player2.loss + 1);    
     } 
     else if (player2.choice === "scissors") {
 
       $("#player2").addClass("winner");
-    
+
+      outcome = player2.name + " wins!";
+      
+      database.ref().child("/players/player2/win").set(player2.win + 1);
+      database.ref().child("/players/player1/loss").set(player1.loss + 1);    
     };
   }
 
@@ -110,17 +111,25 @@ function gameResults() {
     if (player2.choice === "paper") {
 
       $("#player1").addClass("winner");
-    
+
+      database.ref().child("/players/player1/win").set(player1.win + 1);
+      database.ref().child("/players/player2/loss").set(player2.loss + 1);    
     } 
     else if (player2.choice === "rock") {
 
       $("#player2").addClass("winner");
 
+      outcome = player2.name + " wins!";
+      
+      database.ref().child("/players/player2/win").set(player2.win + 1);
+      database.ref().child("/players/player1/loss").set(player1.loss + 1);
     
     };
   };
 
   $("#users").text(outcome);
+  $("#users").addClass("outcome");
+
 
   pick1.addClass("col s12");
   pick2.addClass("col s12");
@@ -133,6 +142,8 @@ function gameResults() {
 
   $("#chatHistory").append(pick1);
   $("#chatHistory").append(pick2);
+  $("#chatHistory").scrollTop($("#chatHistory")[0].scrollHeight);
+
 
   database.ref().child("/turn").set(0);
 
@@ -337,6 +348,7 @@ database.ref().child("/turn").on("value", function(snapshot) {
 
   } else if ((turn === 1) && (player1 && player2 !== null)) {
 
+    $("#users").removeClass("outcome");
     $("#player1").removeClass("winner");
     $("#player2").removeClass("winner");
 
@@ -380,16 +392,3 @@ database.ref().child("/turn").on("value", function(snapshot) {
 
 });
 
-// //Listener to player 1's choice
-// database.ref().child("/players/player1/choice").on("value", function(snapshot) {
-
-//   player1.choice = snapshot.val();
-//   console.log(player1.choice);
-// });
-
-// //Listener to player 2's choice
-// database.ref().child("/players/player2/choice").on("value", function(snapshot) {
-
-//   player2.choice = snapshot.val();
-//   console.log(player2.choice);
-// });

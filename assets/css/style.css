@@ -141,13 +141,14 @@ h2 {
   text-align: center;
   border: .5px solid black;
   border-radius: 10px;
-  font-size: 30px;
+  font-size: 25px;
   margin-bottom: 20px;
 }
 
 #users {
   height: 20%;
   width: 100%;
+  font-size: 35px;
   border-bottom: 1px solid black;
 }
 
@@ -171,13 +172,13 @@ h2 {
 }
 
 .their-turn {
-  box-shadow: 0 0 0 .2rem rgba(230, 43, 10, 0.568);
-  border-radius: 10px;
+  background-color: #72dbcdb7;
+  border: 4px dotted black;
 }
 
 .winner {
-  border: 5px solid lime;
-  box-shadow: 0 0 0 .2rem rgba(0, 255, 0, 0.473);
+  background-color: rgba(0, 255, 0, 0.541);
+  box-shadow: 0 0 0 .2rem rgba(0, 255, 0, 0.144);
   border-radius: 10px;
 }
 
@@ -213,4 +214,9 @@ h2 {
   font-size: 20px;
   border-radius: 20px;
   text-align: center;
+}
+
+.outcome {
+  background-color: #72dbcd;
+  font-size: 30px;
 }
