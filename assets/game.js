@@ -23,6 +23,7 @@ let player2Choice = "";
 
 let yourPlayerName;
 let turn;
+let count;
 
 
 // This function clears the database
@@ -30,6 +31,8 @@ function clearDatabase() {
   database.ref("/players/").remove();
   database.ref("/chat/").remove();
   database.ref("/turn/").remove();
+  database.ref("/count/").remove();
+
 
   //Player2 info
   player1 = null;
@@ -43,6 +46,7 @@ function clearDatabase() {
 
   yourPlayerName;
   turn;
+  count;
 };
 
 //Compares the game results
@@ -147,7 +151,27 @@ function gameResults() {
 
   database.ref().child("/turn").set(0);
 
+  database.ref().child("/count").set(count + 1);
+
+
 };
+
+ function gameReset () {
+
+  $("#game").hide();
+
+  $("#new-game").show();
+
+  let oneScore = $("<div>").text("Win: " + player1.win + ", Loss: " + player1.loss + ", Tie: " + player1.tie);
+
+  let twoScore = $("<div>").text("Win: " + player2.win + ", Loss: " + player2.loss + ", Tie: " + player2.tie);
+
+  $("#new-game").append(player1.name + ": " + oneScore );
+  $("#new-game").append(player2.name + ": " + twoScore );
+
+  setTimeout(clearDatabase, 4000);
+
+ };
 
 $(document).ready(function() {
 
@@ -180,7 +204,7 @@ $("#startBtn").on("click", function(event){
       // Add player1 to the database
       database.ref().child("/players/player1").set(player1);
       // Set the turn value to 1, as player1 goes first
-      database.ref().child("/turn").set(0);
+      // database.ref().child("/turn").set(1);
       
     } else if( (player1 !== null) && (player2 === null) ) {
       // Adding player2
@@ -197,7 +221,8 @@ $("#startBtn").on("click", function(event){
       // Add player2 to the database
       database.ref().child("/players/player2").set(player2);
       // Set the turn value to 1, as player1 goes first
-      database.ref().child("/turn").set(1);
+      // database.ref().child("/turn").set(1);
+      database.ref().child("/count").set(1);
       
     } else {
       $("#users").text("Waiting for both players to enter game.");
@@ -248,6 +273,7 @@ $("img").on("click", function(){
 
   // If both players are active
   if ((player1 !== null) && (player2 !== null)) {
+
     
     // if current user's name is equal to player1Name
     if ((yourPlayerName === player1.name) && (turn === 1)) {
@@ -255,20 +281,12 @@ $("img").on("click", function(){
       player1Choice = playerChoice;
       database.ref().child("/players/player1/choice").set(player1Choice);
       database.ref().child("/turn").set(2);
-      console.log(player1Choice + " player 1");
     }
     // if current user's name is equal to player2Name
     else if ((yourPlayerName === player2.name) && (turn === 2)) {
       player2Choice = playerChoice;
       database.ref().child("/players/player2/choice").set(player2Choice);
       database.ref().child("/turn").set(3);
-      console.log(player2Choice + " player 2");
-
-    } 
-
-    else {
-
-      console.log("Houston, we have a problem.");
     };
   
   } 
@@ -289,7 +307,8 @@ database.ref("/players/").on("value", function(snapshot) {
 		player1 = snapshot.val().player1;
     player1Name = player1.name;
 		$("#1name").text(player1Name);
-		$("#player1Info").html("Win: " + player1.win + ", Loss: " + player1.loss + ", Tie: " + player1.tie);
+    $("#player1Info").html("Win: " + player1.win + ", Loss: " + player1.loss + ", Tie: " + player1.tie);
+    
 	} else {
 
 		player1 = null;
@@ -303,13 +322,21 @@ database.ref("/players/").on("value", function(snapshot) {
 		player2 = snapshot.val().player2;
     player2Name = player2.name;
 		$("#2name").text(player2Name);
-		$("#player2Info").html("Win: " + player2.win + ", Loss: " + player2.loss + ", Tie: " + player2.tie);
+    $("#player2Info").html("Win: " + player2.win + ", Loss: " + player2.loss + ", Tie: " + player2.tie);
+    
 	} else {
 
 		player2 = null;
 		player2Name = "";
 		$("#2name").text("Waiting for Player 2...");
-	};
+  };
+  
+  // if (snapshot.child("player1").exists() && snapshot.child("player2").exists() && turn !== 1) {
+
+  //     $("#player1").addClass("their-turn");
+  //     $("#users").text("Waiting for " + player1Name + " to choose.");
+  //     database.ref().child("/turn").set(1);
+  // };
 
 });
 
@@ -343,7 +370,7 @@ database.ref().child("/turn").on("value", function(snapshot) {
 
   if ((turn === 0) && (player1 && player2 !== null)) {
 
-    setTimeout("database.ref().child('/turn').set(1)", 4000);
+    setTimeout("database.ref().child('/turn').set(1)", 6000);
 
 
   } else if ((turn === 1) && (player1 && player2 !== null)) {
@@ -392,3 +419,13 @@ database.ref().child("/turn").on("value", function(snapshot) {
 
 });
 
+// Count listener
+database.ref().child("/count").on("value", function(snapshot) {
+
+  count = snapshot.val();
+
+   if (count === 4) {
+     
+    setTimeout(gameReset, 4000);
+   }
+});
