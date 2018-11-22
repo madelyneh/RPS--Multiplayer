@@ -318,8 +318,7 @@ database.ref("/chat/").on("child_added", function(snapshot) {
 	let chatMsg = snapshot.val();
   let chatEntry = $("<div>");
   let newMsg = $("<div>").html(chatMsg);
-  // let theirMsg = $("<div>").html(chatMsg);
-
+  $("#chatPlaceholder").hide();
   
    if (chatMsg.startsWith(yourPlayerName)) {
     chatEntry.addClass("col s12");

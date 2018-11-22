@@ -108,7 +108,7 @@ nav {
   width: 100%;
   background-color: white;
   text-align: center;
-  border: .5px solid black;
+  border: 1px solid black;
   border-radius: 10px;
   font-size: 24px;
   word-spacing: 200px;
@@ -139,7 +139,7 @@ h2 {
   width: 100%;
   background-color: white;
   text-align: center;
-  border: .5px solid black;
+  border: 1px solid black;
   border-radius: 10px;
   font-size: 25px;
   margin-bottom: 20px;
@@ -220,3 +220,4 @@ h2 {
   background-color: #72dbcd;
   font-size: 30px;
 }
+
