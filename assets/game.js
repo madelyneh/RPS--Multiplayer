@@ -23,13 +23,14 @@ let player2Choice = "";
 
 let yourPlayerName;
 let turn;
-
+let count = 0;
 
 // This function clears the database
 function clearDatabase() {
   database.ref("/players/").remove();
-  database.ref("/chat/").remove();
-  database.ref("/turn/").remove();
+  database.ref("/chat").remove();
+  database.ref("/turn").remove();
+  database.ref("/count").remove();
 
   //Player2 info
   player1 = null;
@@ -43,6 +44,7 @@ function clearDatabase() {
 
   yourPlayerName;
   turn;
+  count = 0;
 };
 
 //Compares the game results
@@ -69,6 +71,7 @@ function gameResults() {
 
       outcome = player1.name + " wins!";
       
+      
       $("#player1").addClass("winner");
 
       database.ref().child("/players/player1/win").set(player1.win + 1);
@@ -91,6 +94,7 @@ function gameResults() {
     if (player2.choice === "rock") {
 
       $("#player1").addClass("winner");
+      outcome = player1.name + " wins!";
 
       database.ref().child("/players/player1/win").set(player1.win + 1);
       database.ref().child("/players/player2/loss").set(player2.loss + 1);    
@@ -111,6 +115,7 @@ function gameResults() {
     if (player2.choice === "paper") {
 
       $("#player1").addClass("winner");
+      outcome = player1.name + " wins!";
 
       database.ref().child("/players/player1/win").set(player1.win + 1);
       database.ref().child("/players/player2/loss").set(player2.loss + 1);    
@@ -146,8 +151,36 @@ function gameResults() {
 
 
   database.ref().child("/turn").set(0);
-
+  database.ref().child("/count").set(count + 1);
 };
+
+//To restart the game after they play
+function gameReset () {
+
+  $("#game").hide();
+  $("#start").show();
+  $("#intro").empty();
+  $("#form-input").empty();
+
+  let oneScore = 'Win: ' + player1.win + ', Loss: ' + player1.loss + ', Tie: ' + player1.tie;
+  let oneEnd = $("<div>").text(player1.name + ": " + oneScore)
+  let twoScore = "Win: " + player2.win + ", Loss: " + player2.loss + ", Tie: " + player2.tie;
+  let twoEnd = $("<div>").text(player2.name + ": " + twoScore)
+  let playAgain = $("<div>").text("Looks like we know who the winner is...");
+  playAgain.addClass("outcome");
+  let newBtn = $("<button>").text("play again?");
+  newBtn.addClass("btn-large game2");
+  let newForm = $("<form>");
+  newForm.append(newBtn);
+
+  $("#intro").append(playAgain);
+  $("#intro").append(oneEnd);
+  $("#intro").append(twoEnd);
+  $("#form-input").append(newForm);
+
+  setTimeout(clearDatabase, 6000);
+
+ };
 
 $(document).ready(function() {
 
@@ -157,6 +190,8 @@ $(document).ready(function() {
   $("#deleteDatabase").on("click", clearDatabase);
 
 });
+
+//For the second game
 
 //Click event to start the game
 $("#startBtn").on("click", function(event){
@@ -391,3 +426,13 @@ database.ref().child("/turn").on("value", function(snapshot) {
 
 });
 
+// Count listener
+database.ref().child("/count").on("value", function(snapshot) {
+
+  count = snapshot.val();
+
+   if (count === 3) {
+     
+    setTimeout(gameReset, 4000);
+   }
+});

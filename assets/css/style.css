@@ -53,7 +53,7 @@ nav {
   background-color: white;
   width: 100%;
   height: auto;
-  text-align: left;
+  text-align: center;
   padding: 30px;
   border: 1px solid black;
   border-radius: 10px;
@@ -178,7 +178,7 @@ h2 {
 
 .winner {
   background-color: rgba(0, 255, 0, 0.541);
-  box-shadow: 0 0 0 .2rem rgba(0, 255, 0, 0.144);
+  /* box-shadow: 0 0 0 .2rem rgba(0, 255, 0, 0.144); */
   border-radius: 10px;
 }
 
@@ -219,5 +219,6 @@ h2 {
 .outcome {
   background-color: #72dbcd;
   font-size: 30px;
+  border-radius: 10px;
 }
 
